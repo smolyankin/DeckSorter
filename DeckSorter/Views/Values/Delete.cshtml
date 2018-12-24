@@ -1,15 +1,14 @@
 ﻿@model DeckSorter.Models.Value
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Удаление";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<h2>Значение</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Вы точнохотите удалить значение?</h3>
 <div>
-    <h4>Value</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -26,8 +25,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Удалить" class="btn btn-default" /> |
+            @Html.ActionLink("Вернуться к списку значений", "Index")
         </div>
     }
 </div>

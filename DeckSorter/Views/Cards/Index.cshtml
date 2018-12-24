@@ -1,4 +1,4 @@
-﻿@model List<DeckSorter.Response.CardResponse>
+﻿@model IEnumerable<DeckSorter.Response.CardResponse>
 
 @{
     ViewBag.Title = "Карты";
@@ -30,10 +30,10 @@
             @Html.DisplayFor(modelItem => item.Id)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SuitTitle)
+            @Html.DisplayFor(modelItem => item.ValueTitle)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ValueTitle)
+            @Html.DisplayFor(modelItem => item.SuitTitle)
         </td>
         <td>
             @Html.ActionLink("Изменить", "Edit", new { id=item.Id }) |

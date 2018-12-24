@@ -191,7 +191,10 @@
     <Compile Include="Request\CreateSuitRequest.cs" />
     <Compile Include="Request\EditDeckRequest.cs" />
     <Compile Include="Response\CardResponse.cs" />
-    <Compile Include="Service\DeckService.cs" />
+    <Compile Include="Services\CardService.cs" />
+    <Compile Include="Services\DeckService.cs" />
+    <Compile Include="Services\SuitService.cs" />
+    <Compile Include="Services\ValueService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Deck.mdf" />

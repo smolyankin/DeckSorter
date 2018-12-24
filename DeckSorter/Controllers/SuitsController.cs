@@ -1,59 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using DeckSorter.Context;
 using DeckSorter.Models;
+using DeckSorter.Request;
+using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
     public class SuitsController : Controller
     {
-        private DeckContext db = new DeckContext();
+        private SuitService service = new SuitService();
 
         // GET: Suits
         public async Task<ActionResult> Index()
         {
-            return View(await db.Suits.ToListAsync());
+            return View(await service.GetAllSuits());
         }
 
         // GET: Suits/Details/5
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Suit suit = await db.Suits.FindAsync(id);
+            var suit = await service.GetSuitById((long)id);
             if (suit == null)
-            {
                 return HttpNotFound();
-            }
             return View(suit);
         }
 
         // GET: Suits/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateSuitRequest());
         }
 
         // POST: Suits/Create
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Title")] Suit suit)
+        public async Task<ActionResult> Create(CreateSuitRequest suit)
         {
             if (ModelState.IsValid)
             {
-                db.Suits.Add(suit);
-                await db.SaveChangesAsync();
+                await service.CreateSuit(suit);
+
                 return RedirectToAction("Index");
             }
 
@@ -64,30 +55,20 @@ namespace DeckSorter.Controllers
         public async Task<ActionResult> Edit(long? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Suit suit = await db.Suits.FindAsync(id);
+            var suit = await service.GetSuitById((long)id);
             if (suit == null)
-            {
                 return HttpNotFound();
-            }
             return View(suit);
         }
 
         // POST: Suits/Edit/5
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title")] Suit suit)
+        public async Task<ActionResult> Edit(Suit suit)
         {
             if (ModelState.IsValid)
-            {
-                db.Entry(suit).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+                return View(await service.EditSuit(suit));
             return View(suit);
         }
 
@@ -95,14 +76,10 @@ namespace DeckSorter.Controllers
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Suit suit = await db.Suits.FindAsync(id);
+            var suit = await service.GetSuitById((long)id);
             if (suit == null)
-            {
                 return HttpNotFound();
-            }
             return View(suit);
         }
 
@@ -111,19 +88,9 @@ namespace DeckSorter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            Suit suit = await db.Suits.FindAsync(id);
-            db.Suits.Remove(suit);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+            await service.DeleteSuit(id);
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return RedirectToAction("Index");
         }
     }
 }

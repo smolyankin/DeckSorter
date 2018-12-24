@@ -11,20 +11,18 @@ using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Service;
+using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
     public class ValuesController : Controller
     {
-        private DeckService service = new DeckService();
+        private ValueService service = new ValueService();
 
         // GET: Values
         public async Task<ActionResult> Index()
         {
-
-            var values = await service.GetAllValues();
-
-            return View(values);
+            return View(await service.GetAllValues());
         }
 
         // GET: Values/Details/5
@@ -41,8 +39,7 @@ namespace DeckSorter.Controllers
         // GET: Values/Create
         public ActionResult Create()
         {
-            var request = new CreateValueRequest();
-            return View(request);
+            return View(new CreateValueRequest());
         }
 
         // POST: Values/Create
@@ -74,14 +71,10 @@ namespace DeckSorter.Controllers
         // POST: Values/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title")] Value value)
+        public async Task<ActionResult> Edit(Value value)
         {
-            /*if (ModelState.IsValid)
-            {
-                db.Entry(value).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }*/
+            if (ModelState.IsValid)
+                return View(await service.EditValue(value));
             return View(value);
         }
 
@@ -101,19 +94,9 @@ namespace DeckSorter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            /*Value value = await db.Values.FindAsync(id);
-            db.Values.Remove(value);
-            await db.SaveChangesAsync();*/
+            await service.DeleteValue(id);
+
             return RedirectToAction("Index");
         }
-        /*
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }*/
     }
 }

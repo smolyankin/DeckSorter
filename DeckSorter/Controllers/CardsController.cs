@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Service;
 using DeckSorter.Response;
+using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
     public class CardsController : Controller
     {
-        private DeckService service = new DeckService();
+        private CardService service = new CardService();
 
         // GET: Cards
         public async Task<ActionResult> Index()
         {
-            var cards = await service.GetAllCards();
-
-            return View(cards);
+            return View(await service.GetAllCards());
         }
 
         // GET: Cards/Details/5
@@ -41,9 +33,7 @@ namespace DeckSorter.Controllers
         // GET: Cards/Create
         public ActionResult Create()
         {
-            var model = new CreateCardRequest();
-
-            return View(model);
+            return View(new CreateCardRequest());
         }
 
         // POST: Cards/Create
@@ -64,47 +54,33 @@ namespace DeckSorter.Controllers
         // GET: Cards/Edit/5
         public async Task<ActionResult> Edit(long? id)
         {
-            /*if (id == null)
-            {
+            if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Card card = await db.Cards.FindAsync(id);
+            var card = await service.GetCardById((long)id);
             if (card == null)
-            {
                 return HttpNotFound();
-            }*/
-            return View(new Card());
+            return View(card);
         }
 
         // POST: Cards/Edit/5
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,SuitId,ValueId")] Card card)
+        public async Task<ActionResult> Edit(CardResponse card)
         {
-            /*if (ModelState.IsValid)
-            {
-                db.Entry(card).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }*/
+            await service.EditCard(card);
+
             return View(card);
         }
 
         // GET: Cards/Delete/5
         public async Task<ActionResult> Delete(long? id)
         {
-            /*if (id == null)
-            {
+            if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Card card = await db.Cards.FindAsync(id);
+            var card = await service.GetCardById((long)id);
             if (card == null)
-            {
                 return HttpNotFound();
-            }*/
-            return View(new Card());
+            return View(card);
         }
 
         // POST: Cards/Delete/5
@@ -112,19 +88,9 @@ namespace DeckSorter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            /*Card card = await db.Cards.FindAsync(id);
-            db.Cards.Remove(card);
-            await db.SaveChangesAsync();*/
+            await service.DeleteCard(id);
+
             return RedirectToAction("Index");
         }
-        /*
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }*/
     }
 }
