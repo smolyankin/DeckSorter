@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\XmlDocument.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -169,8 +170,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Context\DeckContext.cs" />
+    <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\CardsController.cs" />
+    <Compile Include="Controllers\DecksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SuitsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Extensions\BaseClassExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -184,6 +190,7 @@
     <Compile Include="Request\CreateValueRequest.cs" />
     <Compile Include="Request\CreateSuitRequest.cs" />
     <Compile Include="Request\EditDeckRequest.cs" />
+    <Compile Include="Response\CardResponse.cs" />
     <Compile Include="Service\DeckService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +227,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -240,10 +248,28 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Suits\Create.cshtml" />
+    <Content Include="Views\Suits\Delete.cshtml" />
+    <Content Include="Views\Suits\Details.cshtml" />
+    <Content Include="Views\Suits\Edit.cshtml" />
+    <Content Include="Views\Suits\Index.cshtml" />
+    <Content Include="Views\Values\Create.cshtml" />
+    <Content Include="Views\Values\Delete.cshtml" />
+    <Content Include="Views\Values\Details.cshtml" />
+    <Content Include="Views\Values\Edit.cshtml" />
+    <Content Include="Views\Values\Index.cshtml" />
+    <Content Include="Views\Cards\Create.cshtml" />
+    <Content Include="Views\Cards\Delete.cshtml" />
+    <Content Include="Views\Cards\Details.cshtml" />
+    <Content Include="Views\Cards\Edit.cshtml" />
+    <Content Include="Views\Cards\Index.cshtml" />
+    <Content Include="Views\Decks\Create.cshtml" />
+    <Content Include="Views\Decks\Delete.cshtml" />
+    <Content Include="Views\Decks\Details.cshtml" />
+    <Content Include="Views\Decks\Edit.cshtml" />
+    <Content Include="Views\Decks\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Response\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>

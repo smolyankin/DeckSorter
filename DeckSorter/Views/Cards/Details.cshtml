@@ -1,0 +1,35 @@
+﻿@model DeckSorter.Response.CardResponse
+
+@{
+    ViewBag.Title = "Подробно";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Подробно</h2>
+
+<div>
+    <h4>Карта</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName(Model.ValueTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ValueTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayName(Model.SuitTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SuitTitle)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Вернуться к списку карт", "Index")
+</p>

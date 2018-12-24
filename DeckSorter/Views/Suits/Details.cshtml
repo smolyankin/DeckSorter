@@ -1,0 +1,27 @@
+﻿@model DeckSorter.Models.Suit
+
+@{
+    ViewBag.Title = "Подробно";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Подробно</h2>
+
+<div>
+    <h4>Масть</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Вернуться к списку мастей", "Index")
+</p>

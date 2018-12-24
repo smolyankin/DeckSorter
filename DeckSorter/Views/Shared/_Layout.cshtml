@@ -18,11 +18,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Имя приложения", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Сортировщик карт", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Домашняя страница", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Колоды", "Index", "Decks", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Карты", "Index", "Cards", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Значения", "Index", "Values", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Масти", "Index", "Suits", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
                 </ul>
             </div>
@@ -32,7 +36,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year – приложение ASP.NET</p>
+            <p>&copy; @DateTime.Now.Year – DeckSorter by Smolyankin S.S.</p>
         </footer>
     </div>
 

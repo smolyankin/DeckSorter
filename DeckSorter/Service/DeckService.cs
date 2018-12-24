@@ -6,9 +6,14 @@ using System.Web;
 using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
+using DeckSorter.Response;
+using DeckSorter.Extensions;
 
 namespace DeckSorter.Service
 {
+    /// <summary>
+    /// сервис колод
+    /// </summary>
     public class DeckService
     {
         public async Task<Suit> CreateSuit(CreateSuitRequest request)
@@ -20,7 +25,7 @@ namespace DeckSorter.Service
                 if (exist != null)
                     throw new Exception($"suit with title {request.Title} exist");
                 db.Suits.Add(new Suit { Title = request.Title });
-                db.SubmitChanges();
+                await db.SaveChangesAsync();
                 return result;
             }
         }
@@ -34,7 +39,7 @@ namespace DeckSorter.Service
                 if (exist != null)
                     throw new Exception($"value with title {request.Title} exist");
                 db.Values.Add(new Value { Title = request.Title });
-                db.SubmitChanges();
+                await db.SaveChangesAsync();
                 return result;
             }
         }
@@ -48,7 +53,7 @@ namespace DeckSorter.Service
                 if (exist != null)
                     throw new Exception($"card exist");
                 db.Cards.Add(new Card() { SuitId = request.SuitId, ValueId = request.ValueId });
-                db.SubmitChanges();
+                await db.SaveChangesAsync();
                 return result;
             }
         }
@@ -62,7 +67,7 @@ namespace DeckSorter.Service
                 if (exist != null)
                     throw new Exception($"deck with title {request.Title} exist");
                 db.Decks.Add(new Deck() { Title = request.Title, DateModify = DateTime.UtcNow });
-                db.SubmitChanges();
+                await db.SaveChangesAsync();
                 return result;
             }
         }
@@ -78,7 +83,7 @@ namespace DeckSorter.Service
                 if (card == null)
                     throw new Exception("card not exist");
                 deck.Cards.Add(card.Id);
-                db.SubmitChanges();
+                await db.SaveChangesAsync();
                 return deck;
             }
         }
@@ -94,7 +99,7 @@ namespace DeckSorter.Service
                 if (card == null)
                     throw new Exception("card not exist");
                 deck.Cards.Remove(card.Id);
-                db.SubmitChanges();
+                await db.SaveChangesAsync();
                 return deck;
             }
         }
@@ -115,12 +120,90 @@ namespace DeckSorter.Service
             }
         }
 
-        public async Task<List<Card>> GetAllCards()
+        public async Task<List<CardResponse>> GetAllCards()
         {
             using (var db = new DeckContext())
             {
-                return db.Cards.ToList();
+                var cards = db.Cards.ToList();
+                var valuesIds = cards.Select(c => c.ValueId).Distinct().ToList();
+                var values = db.Values.Where(x => valuesIds.Contains(x.Id)).ToList();
+                var suitsIds = cards.Select(c => c.SuitId).Distinct().ToList();
+                var suits = db.Suits.Where(x => suitsIds.Contains(x.Id)).ToList();
+                var response = new List<CardResponse>();
+                foreach (var card in cards)
+                {
+                    var cardResponse = card.Transform<CardResponse>();
+                    cardResponse.ValueTitle = values.FirstOrDefault(x => x.Id == card.ValueId)?.Title;
+                    cardResponse.SuitTitle = suits.FirstOrDefault(x => x.Id == card.SuitId)?.Title;
+                    response.Add(cardResponse);
+                }
+                return response;
             }
         }
+
+        public async Task<List<Deck>> GetAllDecks()
+        {
+            using (var db = new DeckContext())
+            {
+                return db.Decks.ToList();
+            }
+        }
+
+        public async Task<Value> GetValueById(long id)
+        {
+            using (var db = new DeckContext())
+            {
+                return await db.Values.FindAsync(id);
+            }
+        }
+
+        public async Task<Suit> GetSuitById(long id)
+        {
+            using (var db = new DeckContext())
+            {
+                return await db.Suits.FindAsync(id);
+            }
+        }
+
+        public async Task<CardResponse> GetCardById(long id)
+        {
+            using (var db = new DeckContext())
+            {
+                var card = await db.Cards.FindAsync(id);
+                var value = await GetValueById(card.ValueId);
+                var suit = await GetSuitById(card.SuitId);
+                var response = card.Transform<CardResponse>();
+                response.ValueTitle = value.Title;
+                response.SuitTitle = suit.Title;
+
+                return response;
+            }
+        }
+    }
+
+    /// <summary>
+    /// интерфейс колод
+    /// </summary>
+    public interface IDeckService
+    {
+        Task<Suit> CreateSuit(CreateSuitRequest request);
+
+        Task<Value> CreateValue(CreateValueRequest request);
+
+        Task<Card> CreateCard(CreateCardRequest request);
+
+        Task<Deck> CreateDeck(CreateDeckRequest request);
+
+        Task<Deck> AddCard(EditDeckRequest request);
+
+        Task<Deck> RemoveCard(EditDeckRequest request);
+
+        Task<List<Suit>> GetAllSuits();
+
+        Task<List<Value>> GetAllValues();
+
+        Task<List<Card>> GetAllCards();
+
+        Task<List<Card>> GetAllDecks();
     }
 }

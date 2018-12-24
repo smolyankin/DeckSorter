@@ -8,16 +8,16 @@ using DeckSorter.Models;
 
 namespace DeckSorter.Context
 {
-    public class DeckContext : DataContext
+    public class DeckContext : DbContext
     {
         public DeckContext() : base("DeckConnection")
         {
 
         }
 
-        public DbSet<Deck> Decks;
-        public DbSet<Card> Cards;
-        public DbSet<Value> Values;
-        public DbSet<Suit> Suits;
+        public DbSet<Deck> Decks { get; set; }
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<Value> Values { get; set; }
+        public DbSet<Suit> Suits { get; set; }
     }
 }
