@@ -19,14 +19,18 @@ namespace DeckSorter.Services
         public async Task<CreateCardRequest> CreateCardModel()
         {
             var model = new CreateCardRequest();
-            model.Values = await _valueService.GetAllValues();
-            model.ValuesItems = model.Values
-                .Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() })
-                .ToList();
-            model.Suits = await _suitService.GetAllSuits();
-            model.SuitsItems = model.Suits
-                .Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() })
-                .ToList();
+            var values = await _valueService.GetAllValues();
+            model.Values = values.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Title
+            });
+            var suits = await _suitService.GetAllSuits();
+            model.Suits = suits.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Title
+            });
 
             return model;
         }
@@ -35,21 +39,21 @@ namespace DeckSorter.Services
         {
             using (var db = new DeckContext())
             {
-                var exist = db.Cards.FirstOrDefault(x => x.SuitId == request.SuitId && x.ValueId == request.ValueId);
+                /*var exist = db.Cards.FirstOrDefault(x => x.SuitId == request.SelectedSuitId && x.ValueId == request.SelectedValueId);
                 if (exist != null)
-                    throw new Exception($"card exist");
-                if (long.TryParse(request.SuitId.ToString(), out long suitId) &&
-                    suitId > 0 &&
-                    long.TryParse(request.ValueId.ToString(), out long valueId) &&
-                    valueId > 0)
+                    request.Message = "card exist";*/
+                if(long.TryParse(request.SelectedSuitId.ToString(), out long suitId) &&
+                   suitId > 0 && 
+                   long.TryParse(request.SelectedValueId.ToString(), out long valueId) &&
+                   valueId > 0)
                 {
-                    db.Cards.Add(new Card { SuitId = suitId, ValueId = valueId });
+                    db.Cards.Add(new Card {SuitId = suitId, ValueId = valueId});
                     await db.SaveChangesAsync();
                 }
             }
         }
 
-        public async Task<CardResponse> EditCard(CardResponse card)
+        /*public async Task<CardResponse> EditCard(CardResponse card)
         {
             using (var db = new DeckContext())
             {
@@ -67,13 +71,13 @@ namespace DeckSorter.Services
 
                 return result;
             }
-        }
+        }*/
 
         public async Task DeleteCard(long id)
         {
             using (var db = new DeckContext())
             {
-                var exist = await GetCardById(id);
+                var exist = await db.Cards.FindAsync(id);
                 if (exist == null)
                     throw new Exception($"card not exist");
                 db.Cards.Remove(exist);

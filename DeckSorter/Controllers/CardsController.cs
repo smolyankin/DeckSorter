@@ -45,13 +45,14 @@ namespace DeckSorter.Controllers
             if (ModelState.IsValid)
             {
                 await service.CreateCard(request);
-
+                //if (!string.IsNullOrEmpty(request.Message))
+                //    return View(request);
                 return RedirectToAction("Index");
             }
 
             return View(request);
         }
-
+        /*
         // GET: Cards/Edit/5
         public async Task<ActionResult> Edit(long? id)
         {
@@ -71,7 +72,7 @@ namespace DeckSorter.Controllers
             await service.EditCard(card);
 
             return View(card);
-        }
+        }*/
 
         // GET: Cards/Delete/5
         public async Task<ActionResult> Delete(long? id)

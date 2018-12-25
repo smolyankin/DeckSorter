@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using DeckSorter.Models;
 
@@ -9,34 +10,16 @@ namespace DeckSorter.Request
     /// </summary>
     public class CreateCardRequest
     {
-        /// <summary>
-        /// ид значения
-        /// </summary>
-        public long? ValueId { get; set; }
+        [Display(Name = "Значение")]
+        public int SelectedValueId { get; set; }
 
-        /// <summary>
-        /// ид масти
-        /// </summary>
-        public long? SuitId { get; set; }
-        
-        /// <summary>
-        /// список значений
-        /// </summary>
-        public List<Value> Values { get; set; } = new List<Value>();
+        public IEnumerable<SelectListItem> Values { get; set; }
 
-        /// <summary>
-        /// список мастей
-        /// </summary>
-        public List<Suit> Suits{ get; set; } = new List<Suit>();
+        [Display(Name = "Масть")]
+        public int SelectedSuitId { get; set; }
 
-        /// <summary>
-        /// список значений для селекта
-        /// </summary>
-        public List<SelectListItem> ValuesItems { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> Suits { get; set; }
 
-        /// <summary>
-        /// список мастей для селекта
-        /// </summary>
-        public List<SelectListItem> SuitsItems { get; set; } = new List<SelectListItem>();
+        public string Message { get; set; }
     }
 }

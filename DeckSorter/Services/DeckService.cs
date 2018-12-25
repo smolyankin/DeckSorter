@@ -97,13 +97,13 @@ namespace DeckSorter.Service
         {
             var temp = new List<long>();
 
-            var random = new Random();
+            /*var random = new Random();
             var index = random.Next(-deck.Cards.Count / 10, deck.Cards.Count / 10);
             if (expr)
             {
 
             }
-            deck.Cards[index];
+            deck.Cards[index];*/
 
             return new Deck();
         }
@@ -114,23 +114,11 @@ namespace DeckSorter.Service
     /// </summary>
     public interface IDeckService
     {
-        Task<Suit> CreateSuit(CreateSuitRequest request);
-
-        Task<Value> CreateValue(CreateValueRequest request);
-
-        Task<Card> CreateCard(CreateCardRequest request);
-
         Task<Deck> CreateDeck(CreateDeckRequest request);
 
         Task<Deck> AddCard(EditDeckRequest request);
 
         Task<Deck> RemoveCard(EditDeckRequest request);
-
-        Task<List<Suit>> GetAllSuits();
-
-        Task<List<Value>> GetAllValues();
-
-        Task<List<Card>> GetAllCards();
 
         Task<List<Card>> GetAllDecks();
     }
