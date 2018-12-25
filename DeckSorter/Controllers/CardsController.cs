@@ -33,7 +33,8 @@ namespace DeckSorter.Controllers
         // GET: Cards/Create
         public ActionResult Create()
         {
-            return View(new CreateCardRequest());
+            var model = service.CreateCardModel().GetAwaiter().GetResult();
+            return View(model);
         }
 
         // POST: Cards/Create

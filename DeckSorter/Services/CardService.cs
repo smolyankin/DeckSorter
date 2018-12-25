@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
@@ -15,6 +16,21 @@ namespace DeckSorter.Services
         ValueService _valueService = new ValueService();
         SuitService _suitService= new SuitService();
 
+        public async Task<CreateCardRequest> CreateCardModel()
+        {
+            var model = new CreateCardRequest();
+            model.Values = await _valueService.GetAllValues();
+            model.ValuesItems = model.Values
+                .Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() })
+                .ToList();
+            model.Suits = await _suitService.GetAllSuits();
+            model.SuitsItems = model.Suits
+                .Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() })
+                .ToList();
+
+            return model;
+        }
+
         public async Task CreateCard(CreateCardRequest request)
         {
             using (var db = new DeckContext())
@@ -22,8 +38,14 @@ namespace DeckSorter.Services
                 var exist = db.Cards.FirstOrDefault(x => x.SuitId == request.SuitId && x.ValueId == request.ValueId);
                 if (exist != null)
                     throw new Exception($"card exist");
-                db.Cards.Add(new Card { SuitId = request.SuitId, ValueId = request.ValueId });
-                await db.SaveChangesAsync();
+                if (long.TryParse(request.SuitId.ToString(), out long suitId) &&
+                    suitId > 0 &&
+                    long.TryParse(request.ValueId.ToString(), out long valueId) &&
+                    valueId > 0)
+                {
+                    db.Cards.Add(new Card { SuitId = suitId, ValueId = valueId });
+                    await db.SaveChangesAsync();
+                }
             }
         }
 

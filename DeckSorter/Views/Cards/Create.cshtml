@@ -11,7 +11,8 @@
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+    var selectedValue = Model.ValuesItems.FirstOrDefault(x => x.Value == "selectedValue");
+    Model.ValueId = Convert.ToInt64(selectedValue?.Value);
     <div class="form-horizontal">
         <h4>Карта</h4>
         <hr />
@@ -19,19 +20,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SuitId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Values, new SelectList(Model.Values, "Id", "Title", Model.ValueId))
+                @*@Html.DropDownListFor(model => Model.Values, Model.ValuesItems, new { @class = "form-control" })
                 @Html.EditorFor(model => model.SuitId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SuitId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.SuitId, "", new { @class = "text-danger" })*@
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.ValueId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ValueId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ValueId, "", new { @class = "text-danger" })
+                @Html.DropDownList("values", Model.SuitsItems, new { @class = "form-control" })
+                @*@Html.EditorFor(model => model.ValueId, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.ValueId, "", new { @class = "text-danger" })*@
             </div>
         </div>
-
+        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Создать" class="btn btn-default" />

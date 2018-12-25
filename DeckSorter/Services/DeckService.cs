@@ -70,7 +70,43 @@ namespace DeckSorter.Service
             }
         }
 
-        
+        public async Task<Deck> Mixing(Deck deck, bool manual = false)
+        {
+            return manual ? await MixingManual(deck) : await MixingAuto(deck);
+        }
+
+        private async Task<Deck> MixingAuto(Deck deck)
+        {
+            var temp = new List<long>();
+            //var count = deck.Cards.Count;
+            while (temp.Count != deck.Cards.Count)
+            {
+                var random = new Random();
+                var index = random.Next(0, deck.Cards.Count - 1 - temp.Count);
+                temp.Add(deck.Cards[index]);
+                deck.Cards.Remove(deck.Cards[index]);
+                //count++;
+            }
+
+            deck.Cards = temp;
+            
+            return deck;
+        }
+
+        private async Task<Deck> MixingManual(Deck deck)
+        {
+            var temp = new List<long>();
+
+            var random = new Random();
+            var index = random.Next(-deck.Cards.Count / 10, deck.Cards.Count / 10);
+            if (expr)
+            {
+
+            }
+            deck.Cards[index];
+
+            return new Deck();
+        }
     }
 
     /// <summary>
