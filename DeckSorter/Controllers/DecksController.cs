@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
-using DeckSorter.Context;
+using System.Threading.Tasks;
 using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Response;
@@ -15,17 +8,27 @@ using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
+    /// <summary>
+    /// контроллер кород
+    /// </summary>
     public class DecksController : Controller
     {
         private DeckService service = new DeckService();
 
-        // GET: Decks
+        /// <summary>
+        /// список колод
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             return View(await service.GetAllDecks());
         }
 
-        // GET: Decks/Details/5
+        /// <summary>
+        /// подробно о колоде
+        /// </summary>
+        /// <param name="id">ид колоды</param>
+        /// <returns></returns>
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
@@ -36,7 +39,11 @@ namespace DeckSorter.Controllers
             return View(deck);
         }
 
-        // POST: Decks/Details
+        /// <summary>
+        /// перетусовать карты в колоде
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Details(DeckDetailResponse deck)
@@ -44,18 +51,39 @@ namespace DeckSorter.Controllers
             if (ModelState.IsValid)
                 deck = await service.Mixing(deck);
                 
+            return View(deck);
+        }
+
+        /// <summary>
+        /// карты в колоде по порядку
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Sort(DeckDetailResponse deck)
+        {
+            if (ModelState.IsValid)
+                deck = await service.Sorting(deck);
 
             return View(deck);
         }
 
-        // GET: Decks/Create
+        /// <summary>
+        /// создание колоды
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Create()
         {
             var model = await service.CreateDeckModel();
             return View(model);
         }
 
-        // POST: Decks/Create
+        /// <summary>
+        /// создать колоду
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateDeckRequest deck)
@@ -70,7 +98,11 @@ namespace DeckSorter.Controllers
             return View(deck);
         }
 
-        // GET: Decks/Edit/5
+        /// <summary>
+        /// редактирование колоды
+        /// </summary>
+        /// <param name="id">ид колоды</param>
+        /// <returns></returns>
         public async Task<ActionResult> Edit(long? id)
         {
             if (id == null)
@@ -81,7 +113,11 @@ namespace DeckSorter.Controllers
             return View(deck);
         }
 
-        // POST: Decks/Edit/5
+        /// <summary>
+        /// редактировать колоду
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Title,DateModify")] Deck deck)
@@ -95,7 +131,11 @@ namespace DeckSorter.Controllers
             return View(deck);
         }
 
-        // GET: Decks/Delete/5
+        /// <summary>
+        /// удаление колоды
+        /// </summary>
+        /// <param name="id">ид колоды</param>
+        /// <returns></returns>
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
@@ -106,7 +146,11 @@ namespace DeckSorter.Controllers
             return View(deck);
         }
 
-        // POST: Decks/Delete/5
+        /// <summary>
+        /// удалить колоду
+        /// </summary>
+        /// <param name="id">ид колоды</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)

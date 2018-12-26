@@ -60,7 +60,7 @@ namespace DeckSorter.Services
         {
             using (var db = new DeckContext())
             {
-                return db.Values.ToList();
+                return db.Values.OrderBy(x => x.Title).ToList();
             }
         }
 

@@ -33,7 +33,7 @@ namespace DeckSorter.Services
                 var cardsToDeck = string.Empty;
                 if (request.Cards.Any())
                 {
-                    var selectedCards = request.Cards.Where(x => x.IsEnabled).ToList();
+                    var selectedCards = request.Cards.Where(x => x.IsEnabled).OrderBy(x => x.SuitTitle).ThenBy(x => x.ValueTitle).ToList();
                     var cardsIds = selectedCards.Select(x => x.Id).ToList();
                     cardsToDeck = cardsIds.SerializeToJson();
                 }
@@ -58,7 +58,7 @@ namespace DeckSorter.Services
         {
             var result = new CreateDeckRequest();
             var cards = await _cardService.GetAllCards();
-            result.Cards = cards.Select(x => x.Transform<CardDeckResponse>()).ToList();
+            result.Cards = cards.Select(x => x.Transform<CardDeckResponse>()).OrderBy(x => x.SuitTitle).ThenBy(x => x.ValueTitle).ToList();
 
             return result;
         }
@@ -68,7 +68,7 @@ namespace DeckSorter.Services
             using (var db = new DeckContext())
             {
                 var decks = db.Decks.ToList();
-                var resp = decks.Select(x => x.Transform<DeckResponse>()).ToList();
+                var resp = decks.Select(x => x.Transform<DeckResponse>()).OrderByDescending(x => x.DateModify).ToList();
                 foreach (var deck in resp)
                 {
                     var cardsIds = new JsonSerializer().Deserialize<List<long>>
@@ -103,13 +103,16 @@ namespace DeckSorter.Services
 
         public async Task<DeckDetailResponse> Mixing(DeckDetailResponse deck)
         {
-            //var tempManual = deck.Manual;
+            var tempManual = deck.Manual;
+            var tempCount = deck.ManualCount;
             deck = await GetDeckDetailById(deck.Id);
-            if (deck.Manual)
+            if (tempManual)
                 await MixingManual(deck);
             else
                 await MixingAuto(deck);
             await SaveMixingDeck(deck);
+            deck.Manual = tempManual;
+            deck.ManualCount = tempCount;
 
             return deck;
         }
@@ -127,19 +130,39 @@ namespace DeckSorter.Services
             (new JsonTextReader
                 (new StringReader(deck.CardsIds)));
             var count = cardsIds.Count;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < deck.ManualCount; i++)
             {
                 var random = new Random();
-                var minIndex = count > 10 ? - Convert.ToInt32(count * 0.4) : 0;
-                var maxCount = count > 10 ? Convert.ToInt32(count * 0.4) : count - 1;
-                var index = random.Next(minIndex, maxCount);
-                tempCards = deck.Cards.GetRange(0, index + 1);
-                deck.Cards.RemoveRange(0, index + 1);
+                /*
+                var minIndex = count > 10 ? Convert.ToInt32(count * 0.4) : 1;
+                var maxCount = count > 10 ? Convert.ToInt32(count * 0.6) : count;
+                var cnt = random.Next(minIndex - 1, maxCount - 1);
+                */
+                var minCount = Convert.ToInt32(count * 0.4);
+                var maxCount = Convert.ToInt32(count * 0.6);
+                var cnt = random.Next(minCount, maxCount);
+                tempCards = deck.Cards.GetRange(0, cnt);
+                deck.Cards.RemoveRange(0, cnt);
                 deck.Cards.AddRange(tempCards);
+                
             }
 
-            deck.Cards = tempCards;
-            deck.CardsIds = tempCards.Select(x => x.Id).ToList().SerializeToJson();
+            //deck.Cards = tempCards;
+            deck.CardsIds = deck.Cards.Select(x => x.Id).ToList().SerializeToJson();
+        }
+
+        public async Task<DeckDetailResponse> Sorting(DeckDetailResponse deck)
+        {
+            var tempManual = deck.Manual;
+            var tempCount = deck.ManualCount;
+            deck = await GetDeckDetailById(deck.Id);
+            deck.Cards = deck.Cards.OrderBy(x => x.SuitTitle).ThenBy(x => x.ValueTitle).ToList();
+            deck.CardsIds = deck.Cards.Select(x => x.Id).ToList().SerializeToJson();
+            await SaveMixingDeck(deck);
+            deck.Manual = tempManual;
+            deck.ManualCount = tempCount;
+
+            return deck;
         }
 
         public async Task SaveMixingDeck(DeckDetailResponse deck)
@@ -162,10 +185,6 @@ namespace DeckSorter.Services
     public interface IDeckService
     {
         Task<Deck> CreateDeck(CreateDeckRequest request);
-
-        Task<Deck> AddCard(EditDeckRequest request);
-
-        Task<Deck> RemoveCard(EditDeckRequest request);
 
         Task<List<Card>> GetAllDecks();
     }

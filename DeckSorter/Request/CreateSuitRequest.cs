@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace DeckSorter.Request
+﻿namespace DeckSorter.Request
 {
     /// <summary>
-    /// создать масть
+    /// запрос создание масти
     /// </summary>
     public class CreateSuitRequest
     {

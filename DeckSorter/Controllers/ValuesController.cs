@@ -1,30 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
-using DeckSorter.Context;
+using System.Threading.Tasks;
 using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
+    /// <summary>
+    /// контроллер значений
+    /// </summary>
     public class ValuesController : Controller
     {
         private ValueService service = new ValueService();
 
-        // GET: Values
+        /// <summary>
+        /// список значений
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             return View(await service.GetAllValues());
         }
 
-        // GET: Values/Details/5
+        /// <summary>
+        /// подробно о значении
+        /// </summary>
+        /// <param name="id">ид значения</param>
+        /// <returns></returns>
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
@@ -35,13 +38,20 @@ namespace DeckSorter.Controllers
             return View(value);
         }
 
-        // GET: Values/Create
+        /// <summary>
+        /// создание значения
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View(new CreateValueRequest());
         }
 
-        // POST: Values/Create
+        /// <summary>
+        /// создать значение
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateValueRequest request)
@@ -56,7 +66,11 @@ namespace DeckSorter.Controllers
             return View(request);
         }
 
-        // GET: Values/Edit/5
+        /// <summary>
+        /// изменение значения
+        /// </summary>
+        /// <param name="id">ид значения</param>
+        /// <returns></returns>
         public async Task<ActionResult> Edit(long? id)
         {
             if (id == null)
@@ -67,7 +81,11 @@ namespace DeckSorter.Controllers
             return View(value);
         }
 
-        // POST: Values/Edit/5
+        /// <summary>
+        /// изменить значение
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Value value)
@@ -77,7 +95,11 @@ namespace DeckSorter.Controllers
             return View(value);
         }
 
-        // GET: Values/Delete/5
+        /// <summary>
+        /// удаление значения
+        /// </summary>
+        /// <param name="id">ид значения</param>
+        /// <returns></returns>
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
@@ -88,7 +110,11 @@ namespace DeckSorter.Controllers
             return View(value);
         }
 
-        // POST: Values/Delete/5
+        /// <summary>
+        /// удалить значение
+        /// </summary>
+        /// <param name="id">ид значения</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)

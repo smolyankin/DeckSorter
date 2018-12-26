@@ -58,7 +58,7 @@ namespace DeckSorter.Services
         {
             using (var db = new DeckContext())
             {
-                return db.Suits.ToList();
+                return db.Suits.OrderBy(x => x.Title).ToList();
             }
         }
 

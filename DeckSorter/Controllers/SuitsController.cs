@@ -1,25 +1,33 @@
-﻿using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
-using DeckSorter.Context;
+using System.Threading.Tasks;
 using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
+    /// <summary>
+    /// контроллер мастей
+    /// </summary>
     public class SuitsController : Controller
     {
         private SuitService service = new SuitService();
 
-        // GET: Suits
+        /// <summary>
+        /// список мастей
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             return View(await service.GetAllSuits());
         }
 
-        // GET: Suits/Details/5
+        /// <summary>
+        /// подробно о масти
+        /// </summary>
+        /// <param name="id">ид масти</param>
+        /// <returns></returns>
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
@@ -30,13 +38,20 @@ namespace DeckSorter.Controllers
             return View(suit);
         }
 
-        // GET: Suits/Create
+        /// <summary>
+        /// создание масти
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View(new CreateSuitRequest());
         }
 
-        // POST: Suits/Create
+        /// <summary>
+        /// создать масть
+        /// </summary>
+        /// <param name="suit"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateSuitRequest suit)
@@ -51,7 +66,11 @@ namespace DeckSorter.Controllers
             return View(suit);
         }
 
-        // GET: Suits/Edit/5
+        /// <summary>
+        /// изменение масти
+        /// </summary>
+        /// <param name="id">ид масти</param>
+        /// <returns></returns>
         public async Task<ActionResult> Edit(long? id)
         {
             if (id == null)
@@ -62,7 +81,11 @@ namespace DeckSorter.Controllers
             return View(suit);
         }
 
-        // POST: Suits/Edit/5
+        /// <summary>
+        /// изменить масть
+        /// </summary>
+        /// <param name="suit"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Suit suit)
@@ -72,7 +95,11 @@ namespace DeckSorter.Controllers
             return View(suit);
         }
 
-        // GET: Suits/Delete/5
+        /// <summary>
+        /// удаление масти
+        /// </summary>
+        /// <param name="id">ид масти</param>
+        /// <returns></returns>
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
@@ -83,7 +110,11 @@ namespace DeckSorter.Controllers
             return View(suit);
         }
 
-        // POST: Suits/Delete/5
+        /// <summary>
+        /// удалить масть
+        /// </summary>
+        /// <param name="id">ид масти</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)

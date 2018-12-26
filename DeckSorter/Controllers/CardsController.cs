@@ -1,24 +1,32 @@
-﻿using System.Threading.Tasks;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
-using DeckSorter.Models;
+using System.Threading.Tasks;
 using DeckSorter.Request;
-using DeckSorter.Response;
 using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
+    /// <summary>
+    /// контроллер карт
+    /// </summary>
     public class CardsController : Controller
     {
         private CardService service = new CardService();
 
-        // GET: Cards
+        /// <summary>
+        /// список карт
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             return View(await service.GetAllCards());
         }
 
-        // GET: Cards/Details/5
+        /// <summary>
+        /// подробно о карте
+        /// </summary>
+        /// <param name="id">ид карты</param>
+        /// <returns></returns>
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
@@ -29,14 +37,21 @@ namespace DeckSorter.Controllers
             return View(card);
         }
 
-        // GET: Cards/Create
-        public ActionResult Create()
+        /// <summary>
+        /// создание карты
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> Create()
         {
-            var model = service.CreateCardModel().GetAwaiter().GetResult();
+            var model = await service.CreateCardModel();
             return View(model);
         }
 
-        // POST: Cards/Create
+        /// <summary>
+        /// создать карту
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateCardRequest request)
@@ -44,8 +59,7 @@ namespace DeckSorter.Controllers
             if (ModelState.IsValid)
             {
                 await service.CreateCard(request);
-                //if (!string.IsNullOrEmpty(request.Message))
-                //    return View(request);
+                
                 return RedirectToAction("Index");
             }
 
@@ -73,7 +87,11 @@ namespace DeckSorter.Controllers
             return View(card);
         }*/
 
-        // GET: Cards/Delete/5
+        /// <summary>
+        /// удаление карты
+        /// </summary>
+        /// <param name="id">ид карты</param>
+        /// <returns></returns>
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
@@ -84,7 +102,11 @@ namespace DeckSorter.Controllers
             return View(card);
         }
 
-        // POST: Cards/Delete/5
+        /// <summary>
+        /// удалить карту
+        /// </summary>
+        /// <param name="id">ид карты</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)

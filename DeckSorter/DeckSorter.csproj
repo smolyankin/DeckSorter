@@ -174,7 +174,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Context\DeckContext.cs" />
-    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\CardsController.cs" />
     <Compile Include="Controllers\DecksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -193,7 +192,6 @@
     <Compile Include="Request\CreateDeckRequest.cs" />
     <Compile Include="Request\CreateValueRequest.cs" />
     <Compile Include="Request\CreateSuitRequest.cs" />
-    <Compile Include="Request\EditDeckRequest.cs" />
     <Compile Include="Response\CardDeckResponse.cs" />
     <Compile Include="Response\DeckDetailResponse.cs" />
     <Compile Include="Response\DeckResponse.cs" />

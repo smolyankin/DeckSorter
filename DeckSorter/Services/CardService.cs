@@ -102,7 +102,7 @@ namespace DeckSorter.Services
                     cardResponse.SuitTitle = suits.FirstOrDefault(x => x.Id == card.SuitId)?.Title;
                     response.Add(cardResponse);
                 }
-                return response;
+                return response.OrderBy(x => x.SuitTitle).ThenBy(x => x.ValueTitle).ToList();
             }
         }
 
