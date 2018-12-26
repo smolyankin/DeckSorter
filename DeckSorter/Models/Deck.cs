@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DeckSorter.Models
 {
@@ -16,16 +16,18 @@ namespace DeckSorter.Models
         /// <summary>
         /// название
         /// </summary>
+        [Display(Name = "Название колоды")]
         public string Title { get; set; }
 
         /// <summary>
         /// список ид карт
         /// </summary>
-        public List<long> Cards { get; set; } = new List<long>();
+        public string CardsIds { get; set; }
 
         /// <summary>
         /// дата изменения
         /// </summary>
+        [Display(Name = "Дата изменения")]
         public DateTime DateModify { get; set; }
     }
 }

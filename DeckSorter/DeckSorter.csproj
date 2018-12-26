@@ -53,10 +53,14 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NodaTime, Version=2.4.2.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.2.4.2\lib\net45\NodaTime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -190,11 +194,17 @@
     <Compile Include="Request\CreateValueRequest.cs" />
     <Compile Include="Request\CreateSuitRequest.cs" />
     <Compile Include="Request\EditDeckRequest.cs" />
+    <Compile Include="Response\CardDeckResponse.cs" />
+    <Compile Include="Response\DeckDetailResponse.cs" />
+    <Compile Include="Response\DeckResponse.cs" />
     <Compile Include="Response\CardResponse.cs" />
     <Compile Include="Services\CardService.cs" />
     <Compile Include="Services\DeckService.cs" />
     <Compile Include="Services\SuitService.cs" />
     <Compile Include="Services\ValueService.cs" />
+    <Compile Include="Utils\DateTimeExtensions.cs" />
+    <Compile Include="Utils\SerializeToJsonExtensions.cs" />
+    <Compile Include="Utils\UnixTimestampConvertor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Deck.mdf" />

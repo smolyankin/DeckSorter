@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DeckSorter.Service;
+using DeckSorter.Services;
 using System.Threading.Tasks;
 using DeckSorter.Models;
 using DeckSorter.Request;
@@ -17,7 +17,7 @@ namespace DeckSorter.Controllers
     /// </summary>
     public class ApiController : System.Web.Http.ApiController
     {
-        private readonly IDeckService _deckService;
+        /*private readonly IDeckService _deckService;
 
         /// <summary>
         /// 
@@ -116,6 +116,6 @@ namespace DeckSorter.Controllers
         public async Task<List<Card>> GetAllCards()
         {
             return await _deckService.GetAllCards();
-        }
+        }*/
     }
 }

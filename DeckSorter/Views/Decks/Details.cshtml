@@ -1,35 +1,62 @@
-﻿@model DeckSorter.Models.Deck
+﻿@model DeckSorter.Response.DeckDetailResponse
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Подробно";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>@Html.DisplayFor(model => model.Title)</h2>
 
 <div>
-    <h4>Deck</h4>
+    <h3>@Html.DisplayNameFor(model => model.Count) @Html.DisplayFor(model => model.Count)</h3>
+    <h4>@Html.DisplayNameFor(model => model.DateModify) @Html.DisplayFor(model => model.DateModify)</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateModify)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DateModify)
-        </dd>
-
-    </dl>
+    <p>
+        @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Вернуться к списку колод", "Index")
+    </p>
+    <hr />
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.CheckBoxFor(model => Model.Manual, new { manual = Model.Manual });
+    @Html.HiddenFor(model => model.Manual);
+    @Html.DisplayNameFor(model => model.Manual);
+    if (Model.Manual)
+    {
+        <div>
+
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Перемешать" class="btn btn-default" />
+        </div>
+        <hr />
+    </div>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Cards.FirstOrDefault().ValueTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cards.FirstOrDefault().SuitTitle)
+        </th>
+    </tr>
+
+    @foreach (var card in Model.Cards)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => card.ValueTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => card.SuitTitle)
+            </td>
+        </tr>
+    }
+
+</table>

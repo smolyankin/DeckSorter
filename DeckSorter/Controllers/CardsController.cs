@@ -3,7 +3,6 @@ using System.Net;
 using System.Web.Mvc;
 using DeckSorter.Models;
 using DeckSorter.Request;
-using DeckSorter.Service;
 using DeckSorter.Response;
 using DeckSorter.Services;
 

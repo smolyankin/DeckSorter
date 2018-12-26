@@ -10,7 +10,6 @@ using System.Web.Mvc;
 using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
-using DeckSorter.Service;
 using DeckSorter.Services;
 
 namespace DeckSorter.Controllers

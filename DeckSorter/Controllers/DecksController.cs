@@ -9,51 +9,61 @@ using System.Web;
 using System.Web.Mvc;
 using DeckSorter.Context;
 using DeckSorter.Models;
+using DeckSorter.Request;
+using DeckSorter.Response;
+using DeckSorter.Services;
 
 namespace DeckSorter.Controllers
 {
     public class DecksController : Controller
     {
-        private DeckContext db = new DeckContext();
+        private DeckService service = new DeckService();
 
         // GET: Decks
         public async Task<ActionResult> Index()
         {
-            return View(await db.Decks.ToListAsync());
+            return View(await service.GetAllDecks());
         }
 
         // GET: Decks/Details/5
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Deck deck = await db.Decks.FindAsync(id);
+            var deck = await service.GetDeckDetailById((long)id);
             if (deck == null)
-            {
                 return HttpNotFound();
-            }
+            return View(deck);
+        }
+
+        // POST: Decks/Details
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Details(DeckDetailResponse deck)
+        {
+            if (ModelState.IsValid)
+                deck = await service.Mixing(deck);
+                
+
             return View(deck);
         }
 
         // GET: Decks/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var model = await service.CreateDeckModel();
+            return View(model);
         }
 
         // POST: Decks/Create
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Title,DateModify")] Deck deck)
+        public async Task<ActionResult> Create(CreateDeckRequest deck)
         {
             if (ModelState.IsValid)
             {
-                db.Decks.Add(deck);
-                await db.SaveChangesAsync();
+                await service.CreateDeck(deck);
+
                 return RedirectToAction("Index");
             }
 
@@ -64,30 +74,24 @@ namespace DeckSorter.Controllers
         public async Task<ActionResult> Edit(long? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Deck deck = await db.Decks.FindAsync(id);
+            var deck = await service.GetDeckDetailById((long)id);
             if (deck == null)
-            {
                 return HttpNotFound();
-            }
             return View(deck);
         }
 
         // POST: Decks/Edit/5
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Title,DateModify")] Deck deck)
         {
-            if (ModelState.IsValid)
+            /*if (ModelState.IsValid)
             {
                 db.Entry(deck).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
-            }
+            }*/
             return View(deck);
         }
 
@@ -95,14 +99,10 @@ namespace DeckSorter.Controllers
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Deck deck = await db.Decks.FindAsync(id);
+            var deck = await service.GetDeckDetailById((long)id);
             if (deck == null)
-            {
                 return HttpNotFound();
-            }
             return View(deck);
         }
 
@@ -111,19 +111,10 @@ namespace DeckSorter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            Deck deck = await db.Decks.FindAsync(id);
+            /*Deck deck = await db.Decks.FindAsync(id);
             db.Decks.Remove(deck);
-            await db.SaveChangesAsync();
+            await db.SaveChangesAsync();*/
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
