@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -8,14 +9,23 @@ using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Response;
 using DeckSorter.Extensions;
+using DeckSorter.Utils;
+using Newtonsoft.Json;
 
 namespace DeckSorter.Services
 {
+    /// <summary>
+    /// сервис карт
+    /// </summary>
     public class CardService
     {
         ValueService _valueService = new ValueService();
         SuitService _suitService= new SuitService();
 
+        /// <summary>
+        /// создание модели создания карты
+        /// </summary>
+        /// <returns></returns>
         public async Task<CreateCardRequest> CreateCardModel()
         {
             var model = new CreateCardRequest();
@@ -35,13 +45,15 @@ namespace DeckSorter.Services
             return model;
         }
 
+        /// <summary>
+        /// создание карты
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task CreateCard(CreateCardRequest request)
         {
             using (var db = new DeckContext())
             {
-                /*var exist = db.Cards.FirstOrDefault(x => x.SuitId == request.SelectedSuitId && x.ValueId == request.SelectedValueId);
-                if (exist != null)
-                    request.Message = "card exist";*/
                 if(long.TryParse(request.SelectedSuitId.ToString(), out long suitId) &&
                    suitId > 0 && 
                    long.TryParse(request.SelectedValueId.ToString(), out long valueId) &&
@@ -53,38 +65,40 @@ namespace DeckSorter.Services
             }
         }
 
-        /*public async Task<CardResponse> EditCard(CardResponse card)
-        {
-            using (var db = new DeckContext())
-            {
-                var exist = await GetCardById(card.Id);
-                if (exist == null)
-                    throw new Exception($"card not exist");
-                var value = await db.Values.FindAsync(card.ValueId);
-                var suit = await db.Suits.FindAsync(card.SuitId);
-                exist.ValueId = card.ValueId;
-                exist.SuitId = card.SuitId;
-                await db.SaveChangesAsync();
-                var result = card.Transform<CardResponse>();
-                result.ValueTitle = value.Title;
-                result.SuitTitle = suit.Title;
-
-                return result;
-            }
-        }*/
-
+        /// <summary>
+        /// удаление карты
+        /// </summary>
+        /// <param name="id">ид карты</param>
+        /// <returns></returns>
         public async Task DeleteCard(long id)
         {
             using (var db = new DeckContext())
             {
                 var exist = await db.Cards.FindAsync(id);
-                if (exist == null)
-                    throw new Exception($"card not exist");
-                db.Cards.Remove(exist);
-                await db.SaveChangesAsync();
+                if (exist != null)
+                {
+                    var decks = db.Decks.ToList();
+                    foreach (var deck in decks)
+                    {
+                        var cardsIds = new JsonSerializer().Deserialize<List<long>>
+                        (new JsonTextReader
+                            (new StringReader(deck.CardsIds)));
+                        if (cardsIds.Contains(exist.Id))
+                        {
+                            cardsIds.Remove(exist.Id);
+                            deck.CardsIds = cardsIds.SerializeToJson();
+                        }
+                    }
+                    db.Cards.Remove(exist);
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
+        /// <summary>
+        /// список карт
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<CardResponse>> GetAllCards()
         {
             using (var db = new DeckContext())
@@ -106,6 +120,11 @@ namespace DeckSorter.Services
             }
         }
 
+        /// <summary>
+        /// получить карту по ид
+        /// </summary>
+        /// <param name="id">ид карты</param>
+        /// <returns></returns>
         public async Task<CardResponse> GetCardById(long id)
         {
             using (var db = new DeckContext())
@@ -120,21 +139,5 @@ namespace DeckSorter.Services
                 return response;
             }
         }
-    }
-
-    /// <summary>
-    /// интерфейс колод
-    /// </summary>
-    public interface ICardService
-    {
-        Task CreateCard(CreateCardRequest request);
-
-        Task<Card> EditCard(CardResponse card);
-
-        Task DeleteCard(CardResponse card);
-
-        Task<List<Card>> GetAllCards();
-
-        Task<Card> GetCardById(long id);
     }
 }

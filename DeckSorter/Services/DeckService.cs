@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Response;
 using DeckSorter.Extensions;
-using DeckSorter.Services;
 using DeckSorter.Utils;
 using Newtonsoft.Json;
 
@@ -18,10 +16,15 @@ namespace DeckSorter.Services
     /// <summary>
     /// сервис колод
     /// </summary>
-    public class DeckService
+    public class DeckService : IDeckService
     {
         CardService _cardService = new CardService();
 
+        /// <summary>
+        /// создание колоды
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Deck> CreateDeck(CreateDeckRequest request)
         {
             using (var db = new DeckContext())
@@ -39,9 +42,6 @@ namespace DeckSorter.Services
                 }
                 else
                     cardsToDeck = new List<long>().SerializeToJson();
-                /*var cardsToDeck = request.Cards.Any(x => x.IsEnabled) ?
-                    request.Cards.Where(w => w.IsEnabled).Select(x => x.Id).ToList().SerializeToJson() :
-                    new List<long>().SerializeToJson();*/
                 db.Decks.Add(new Deck()
                 {
                     Title = request.Title,
@@ -54,6 +54,10 @@ namespace DeckSorter.Services
             }
         }
 
+        /// <summary>
+        /// создание модели создания колоды
+        /// </summary>
+        /// <returns></returns>
         public async Task<CreateDeckRequest> CreateDeckModel()
         {
             var result = new CreateDeckRequest();
@@ -63,6 +67,10 @@ namespace DeckSorter.Services
             return result;
         }
 
+        /// <summary>
+        /// получить все доски
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<DeckResponse>> GetAllDecks()
         {
             using (var db = new DeckContext())
@@ -81,6 +89,11 @@ namespace DeckSorter.Services
             }
         }
 
+        /// <summary>
+        /// получить детально колоду по ид
+        /// </summary>
+        /// <param name="id">ид колоды</param>
+        /// <returns></returns>
         public async Task<DeckDetailResponse> GetDeckDetailById(long id)
         {
             using (var db = new DeckContext())
@@ -101,6 +114,11 @@ namespace DeckSorter.Services
             }
         }
 
+        /// <summary>
+        /// перемешать карты
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         public async Task<DeckDetailResponse> Mixing(DeckDetailResponse deck)
         {
             var tempManual = deck.Manual;
@@ -117,12 +135,22 @@ namespace DeckSorter.Services
             return deck;
         }
 
+        /// <summary>
+        /// случайное перемешивание
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         private async Task MixingAuto(DeckDetailResponse deck)
         {
             deck.Cards = deck.Cards.OrderBy(a => Guid.NewGuid()).ToList();
             deck.CardsIds = deck.Cards.Select(x => x.Id).ToList().SerializeToJson();
         }
 
+        /// <summary>
+        /// имитация ручного перемешивания приблизительно по половине
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         private async Task MixingManual(DeckDetailResponse deck)
         {
             var tempCards = new List<CardResponse>();
@@ -133,24 +161,21 @@ namespace DeckSorter.Services
             for (int i = 0; i < deck.ManualCount; i++)
             {
                 var random = new Random();
-                /*
-                var minIndex = count > 10 ? Convert.ToInt32(count * 0.4) : 1;
-                var maxCount = count > 10 ? Convert.ToInt32(count * 0.6) : count;
-                var cnt = random.Next(minIndex - 1, maxCount - 1);
-                */
                 var minCount = Convert.ToInt32(count * 0.4);
                 var maxCount = Convert.ToInt32(count * 0.6);
                 var cnt = random.Next(minCount, maxCount);
                 tempCards = deck.Cards.GetRange(0, cnt);
                 deck.Cards.RemoveRange(0, cnt);
                 deck.Cards.AddRange(tempCards);
-                
             }
-
-            //deck.Cards = tempCards;
             deck.CardsIds = deck.Cards.Select(x => x.Id).ToList().SerializeToJson();
         }
 
+        /// <summary>
+        /// сортировка карт по умолчанию
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         public async Task<DeckDetailResponse> Sorting(DeckDetailResponse deck)
         {
             var tempManual = deck.Manual;
@@ -165,7 +190,12 @@ namespace DeckSorter.Services
             return deck;
         }
 
-        public async Task SaveMixingDeck(DeckDetailResponse deck)
+        /// <summary>
+        /// сохранить новый порядок карт
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
+        private async Task SaveMixingDeck(DeckDetailResponse deck)
         {
             using (var db = new DeckContext())
             {
@@ -173,6 +203,25 @@ namespace DeckSorter.Services
                 if (exist != null)
                 {
                     exist.CardsIds = deck.CardsIds;
+                    exist.DateModify = DateTime.UtcNow;
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// удалить доску
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteDeck(long id)
+        {
+            using (var db = new DeckContext())
+            {
+                var exist = await db.Decks.FindAsync(id);
+                if (exist != null)
+                {
+                    db.Decks.Remove(exist);
                     await db.SaveChangesAsync();
                 }
             }
@@ -184,8 +233,45 @@ namespace DeckSorter.Services
     /// </summary>
     public interface IDeckService
     {
+        /// <summary>
+        /// создание колоды
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         Task<Deck> CreateDeck(CreateDeckRequest request);
 
-        Task<List<Card>> GetAllDecks();
+        /// <summary>
+        /// получить все доски
+        /// </summary>
+        /// <returns></returns>
+        Task<List<DeckResponse>> GetAllDecks();
+
+        /// <summary>
+        /// получить детально колоду по ид
+        /// </summary>
+        /// <param name="id">ид колоды</param>
+        /// <returns></returns>
+        Task<DeckDetailResponse> GetDeckDetailById(long id);
+
+        /// <summary>
+        /// перемешать карты
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
+        Task<DeckDetailResponse> Mixing(DeckDetailResponse deck);
+
+        /// <summary>
+        /// сортировка карт по умолчанию
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
+        Task<DeckDetailResponse> Sorting(DeckDetailResponse deck);
+
+        /// <summary>
+        /// удалить доску
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteDeck(long id);
     }
 }

@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<DeckSorter.Response.CardResponse>
 
 @{
-    ViewBag.Title = "Карты";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Карты";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Карты</h2>
@@ -13,7 +15,7 @@
 <table class="table">
     <tr>
         <th>
-           Ид
+            Ид
         </th>
         <th>
             Значение
@@ -24,22 +26,23 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ValueTitle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SuitTitle)
-        </td>
-        <td>
-            @Html.ActionLink("Подробно", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Удалить", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ValueTitle)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.SuitTitle)
+    </td>
+    <td>
+        @Html.ActionLink("Подробно", "Details", new { id = item.Id }) |
+        @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+    </td>
+</tr>
 }
 
 </table>

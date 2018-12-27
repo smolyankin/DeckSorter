@@ -1,8 +1,10 @@
 ﻿@model DeckSorter.Models.Suit
 
 @{
-    ViewBag.Title = "Удаление";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Удаление";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Удаление</h2>
@@ -21,12 +23,13 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+    @using (Html.BeginForm())
+    {
+@Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Удалить" class="btn btn-default" /> |
-            @Html.ActionLink("Вернуться к списку мастей", "Index")
-        </div>
-    }
+<div class="form-actions no-color">
+    <input type="submit" value="Удалить" class="btn btn-default" /> |
+    @Html.ActionLink("Вернуться к списку мастей", "Index")
+</div>
+}
 </div>

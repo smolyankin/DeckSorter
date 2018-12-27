@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using System.Threading.Tasks;
-using DeckSorter.Models;
 using DeckSorter.Request;
 using DeckSorter.Response;
 using DeckSorter.Services;
@@ -66,7 +65,7 @@ namespace DeckSorter.Controllers
             if (ModelState.IsValid)
                 deck = await service.Sorting(deck);
 
-            return View(deck);
+            return RedirectToAction("Index");
         }
 
         /// <summary>
@@ -99,39 +98,6 @@ namespace DeckSorter.Controllers
         }
 
         /// <summary>
-        /// редактирование колоды
-        /// </summary>
-        /// <param name="id">ид колоды</param>
-        /// <returns></returns>
-        public async Task<ActionResult> Edit(long? id)
-        {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var deck = await service.GetDeckDetailById((long)id);
-            if (deck == null)
-                return HttpNotFound();
-            return View(deck);
-        }
-
-        /// <summary>
-        /// редактировать колоду
-        /// </summary>
-        /// <param name="deck"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,DateModify")] Deck deck)
-        {
-            /*if (ModelState.IsValid)
-            {
-                db.Entry(deck).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }*/
-            return View(deck);
-        }
-
-        /// <summary>
         /// удаление колоды
         /// </summary>
         /// <param name="id">ид колоды</param>
@@ -155,9 +121,8 @@ namespace DeckSorter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            /*Deck deck = await db.Decks.FindAsync(id);
-            db.Decks.Remove(deck);
-            await db.SaveChangesAsync();*/
+            await service.DeleteDeck(id);
+
             return RedirectToAction("Index");
         }
     }

@@ -65,28 +65,7 @@ namespace DeckSorter.Controllers
 
             return View(request);
         }
-        /*
-        // GET: Cards/Edit/5
-        public async Task<ActionResult> Edit(long? id)
-        {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var card = await service.GetCardById((long)id);
-            if (card == null)
-                return HttpNotFound();
-            return View(card);
-        }
-
-        // POST: Cards/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(CardResponse card)
-        {
-            await service.EditCard(card);
-
-            return View(card);
-        }*/
-
+        
         /// <summary>
         /// удаление карты
         /// </summary>

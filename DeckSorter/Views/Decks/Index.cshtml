@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<DeckSorter.Response.DeckResponse>
 
 @{
-    ViewBag.Title = "Колоды";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Колоды";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Колоды</h2>
@@ -24,23 +26,23 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Count)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateModify)
-        </td>
-        <td>
-            @Html.ActionLink("Изменить", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Подробно", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
-        </td>
-    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Count)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DateModify)
+    </td>
+    <td>
+        @Html.ActionLink("Подробно", "Details", new { id = item.Id }) |
+        @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+    </td>
+</tr>
 }
 
 </table>

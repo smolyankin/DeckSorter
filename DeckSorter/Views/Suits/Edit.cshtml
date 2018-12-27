@@ -1,8 +1,10 @@
 ﻿@model DeckSorter.Models.Suit
 
 @{
-    ViewBag.Title = "Изменить";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Изменить";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Изменить</h2>
@@ -11,7 +13,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Масть</h4>
         <hr />

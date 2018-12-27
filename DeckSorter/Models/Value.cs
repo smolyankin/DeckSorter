@@ -1,4 +1,6 @@
-﻿namespace DeckSorter.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DeckSorter.Models
 {
     /// <summary>
     /// сущность значения
@@ -13,6 +15,7 @@
         /// <summary>
         /// название
         /// </summary>
+        [Display(Name = "Название")]
         public string Title { get; set; }
     }
 }

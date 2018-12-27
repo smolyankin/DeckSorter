@@ -1,48 +1,45 @@
 ﻿@model DeckSorter.Request.CreateCardRequest
 
 @{
-    ViewBag.Title = "Создание";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Создание";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Создание</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>Карта</h4>
-    @if (!string.IsNullOrEmpty(Model.Message))
-    {
-        <div class="text-danger">
-            @Model.Message
-        </div>
-    }
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <h4>Карта</h4>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.SelectedValueId, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.SelectedValueId, Model.Values, htmlAttributes: new { @class = "control-label col-md-10" })
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SelectedValueId, new { htmlAttributes = new { @class = "control-label" } })
+            <div>
+                @Html.DropDownListFor(m => m.SelectedValueId, Model.Values, new { htmlAttributes = new { @class = "control-label" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SelectedSuitId, new { htmlAttributes = new { @class = "control-label" } })
+            <div>
+                @Html.DropDownListFor(m => m.SelectedSuitId, Model.Suits, new { htmlAttributes = new { @class = "control-label" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <input type="submit" value="Создать" class="btn btn-default" />
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.SelectedSuitId, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.SelectedSuitId, Model.Suits, htmlAttributes: new { @class = "control-label col-md-10" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Создать" class="btn btn-default" />
-        </div>
-    </div>
-</div>
 }
 
 <div>

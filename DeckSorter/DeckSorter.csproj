@@ -174,6 +174,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Context\DeckContext.cs" />
+    <Compile Include="Controllers\ApiDeckController.cs" />
     <Compile Include="Controllers\CardsController.cs" />
     <Compile Include="Controllers\DecksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -272,13 +273,12 @@
     <Content Include="Views\Cards\Create.cshtml" />
     <Content Include="Views\Cards\Delete.cshtml" />
     <Content Include="Views\Cards\Details.cshtml" />
-    <Content Include="Views\Cards\Edit.cshtml" />
     <Content Include="Views\Cards\Index.cshtml" />
     <Content Include="Views\Decks\Create.cshtml" />
     <Content Include="Views\Decks\Delete.cshtml" />
     <Content Include="Views\Decks\Details.cshtml" />
-    <Content Include="Views\Decks\Edit.cshtml" />
     <Content Include="Views\Decks\Index.cshtml" />
+    <Content Include="Views\Decks\Sort.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

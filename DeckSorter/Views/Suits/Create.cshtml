@@ -1,17 +1,19 @@
 ﻿@model DeckSorter.Request.CreateSuitRequest
 
 @{
-    ViewBag.Title = "Создание масти";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Создание масти";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Создать</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Масть</h4>
         <hr />

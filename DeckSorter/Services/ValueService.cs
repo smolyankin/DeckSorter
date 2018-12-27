@@ -5,18 +5,23 @@ using System.Threading.Tasks;
 using DeckSorter.Context;
 using DeckSorter.Models;
 using DeckSorter.Request;
-using DeckSorter.Response;
-using DeckSorter.Extensions;
 
 namespace DeckSorter.Services
 {
+    /// <summary>
+    /// сервис значений
+    /// </summary>
     public class ValueService
     {
+        /// <summary>
+        /// создать значение
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task CreateValue(CreateValueRequest request)
         {
             using (var db = new DeckContext())
             {
-                var result = new Value();
                 var exist = db.Values.FirstOrDefault(x => x.Title.ToLower() == request.Title.ToLower());
                 if (exist != null)
                     throw new Exception($"value with title {request.Title} exist");
@@ -25,37 +30,56 @@ namespace DeckSorter.Services
             }
         }
 
+        /// <summary>
+        /// изменить значение
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public async Task<Value> EditValue(Value value)
         {
             using (var db = new DeckContext())
             {
-                var result = new Value();
-                var exist = db.Values.FirstOrDefault(x => x.Id == value.Id);
-                if (exist == null)
-                    throw new Exception($"value with title {value.Title} not exist");
-                if (exist.Title != value.Title)
+                var exist = await db.Values.FindAsync(value.Id);
+                if (exist != null && exist.Title != value.Title)
                 {
                     exist.Title = value.Title;
                     await db.SaveChangesAsync();
                 }
 
-                return result;
+                return exist;
             }
         }
 
+        /// <summary>
+        /// удалить значение
+        /// </summary>
+        /// <param name="id">ид значения</param>
+        /// <returns></returns>
         public async Task DeleteValue(long id)
         {
             using (var db = new DeckContext())
             {
-                var result = new Value();
                 var exist = await db.Values.FindAsync(id);
-                if (exist == null)
-                    throw new Exception($"value not exist");
-                db.Values.Remove(exist);
-                await db.SaveChangesAsync();
+                if (exist != null)
+                {
+                    var cards = db.Cards.ToList();
+                    foreach (var card in cards)
+                        if (card.ValueId == id)
+                        {
+                            var cardService = new CardService();
+                            await cardService.DeleteCard(card.Id);
+                        }
+                            
+                    db.Values.Remove(exist);
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
+        /// <summary>
+        /// получить все значения
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Value>> GetAllValues()
         {
             using (var db = new DeckContext())
@@ -64,6 +88,11 @@ namespace DeckSorter.Services
             }
         }
 
+        /// <summary>
+        /// получить значение по ид
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Value> GetValueById(long id)
         {
             using (var db = new DeckContext())
@@ -71,21 +100,5 @@ namespace DeckSorter.Services
                 return await db.Values.FindAsync(id);
             }
         }
-    }
-
-    /// <summary>
-    /// интерфейс колод
-    /// </summary>
-    public interface IValueService
-    {
-        Task CreateValue(CreateValueRequest request);
-
-        Task<Value> EditValue(Value value);
-
-        Task DeleteValue(Value value);
-
-        Task<List<Value>> GetAllValues();
-
-        Task<Value> GetValueById(long id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using DeckSorter.Response;
 
 namespace DeckSorter.Request
@@ -11,6 +12,7 @@ namespace DeckSorter.Request
         /// <summary>
         /// название колоды
         /// </summary>
+        [Display(Name = "Название")]
         public string Title { get; set; }
 
         /// <summary>

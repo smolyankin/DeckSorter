@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Подробно";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    @Styles.Render("~/Content/css")
 }
 
 <h2>@Html.DisplayFor(model => model.Title)</h2>
@@ -12,7 +13,7 @@
     <h4>@Html.DisplayNameFor(model => model.DateModify) @Html.DisplayFor(model => model.DateModify)</h4>
     <hr />
     <p>
-        @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Удалить", "Delete", new { id = Model.Id }) |
         @Html.ActionLink("Вернуться к списку колод", "Index")
     </p>
     <hr />
@@ -22,17 +23,16 @@
     @Html.AntiForgeryToken()
 
     @Html.CheckBoxFor(model => Model.Manual, new { manual = Model.Manual });
-    @Html.HiddenFor(model => model.Manual);
     @Html.DisplayNameFor(model => model.Manual);
-    <div name="man" id="man" value="man" class="form-group">
-        @Html.LabelFor(model => Model.ManualCount, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
+    <div id="man" class="form-group">
+        @Html.LabelFor(model => Model.ManualCount, new { htmlAttributes = new { @class = "control-label" } })
+        <div>
             @Html.EditorFor(model => Model.ManualCount, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => Model.ManualCount, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div style="margin: 10px;">
             <input type="submit" value="Перемешать" class="btn btn-default" />
         </div>
         <hr />
@@ -43,8 +43,12 @@
     @Html.AntiForgeryToken()
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Сортировать по умолчанию" class="btn btn-default" />
+        <div style="margin: 10px;">
+            <input type="hidden" name="Id" value=@Model.Id />
+            <input type="submit"
+                   value="По умолчанию и выйти"
+                   class="btn btn-default"
+                   style="width: auto; max-width: 800px !important;" />
         </div>
         <hr />
     </div>
@@ -73,21 +77,4 @@
 
 </table>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryunobtrusive") @*For unobtrusive-ajax*@
-    @Scripts.Render("~/bundles/jqueryval") @*For validate and validate-unobtrusive*@
-
-    <script>
-        $(function () {
-            $("#Manual").click(function () {
-                if ($(this).is(':checked')) {
-                    $("#man").show();
-                }
-                else {
-                    $("#man").hide();
-                }
-            });
-        });
-    </script>
-}
 
