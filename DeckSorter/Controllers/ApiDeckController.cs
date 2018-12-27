@@ -12,19 +12,10 @@ namespace DeckSorter.Controllers
     /// <summary>
     /// апи контроллер колод
     /// </summary>
+    [RoutePrefix("api")]
     public class ApiDeckController : ApiController
     {
         private DeckService _deckService = new DeckService();
-        /*private readonly IDeckService _deckService;
-
-        /// <summary>
-        /// const
-        /// </summary>
-        /// <param name="deckService"></param>
-        public ApiDeckController(IDeckService deckService)
-        {
-            _deckService = deckService;
-        }*/
 
         /// <summary>
         /// список колод
